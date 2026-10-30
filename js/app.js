@@ -22,4 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('aura_theme', newTheme);
     themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
   });
+
+  window.addEventListener('beforeunload', () => {
+  if (typeof SpeechModule !== 'undefined') SpeechModule.cancel();
+});
 });

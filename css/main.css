@@ -364,3 +364,37 @@ body {
     flex-direction: column;
   }
 }
+
+.word-with-audio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.word-with-audio .target-word {
+  margin: 0;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* для кнопки внутри таблицы */
+.glass-table .icon-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 0.9rem;
+  margin-left: 6px;
+  vertical-align: middle;
+}

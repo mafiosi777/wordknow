@@ -12,6 +12,9 @@ const UIModule = (() => {
   const activeSessionCard = document.getElementById('active-session-card');
   const resultsCard = document.getElementById('results-card');
 
+  const studySpeakBtn   = document.getElementById('study-speak-btn');
+const sessionSpeakBtn = document.getElementById('session-speak-btn');
+
   const startSessionBtn = document.getElementById('start-session-btn');
   const finishSessionBtn = document.getElementById('finish-session-btn');
 
@@ -141,6 +144,9 @@ const UIModule = (() => {
   // Переключение вкладок
   navBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+
+      SpeechModule.cancel();
+
       navBtns.forEach(b => b.classList.remove('active'));
       tabContents.forEach(c => c.classList.add('hidden'));
 
@@ -189,6 +195,13 @@ const UIModule = (() => {
     }
   });
 
+  // Озвучить слово, если оно "англоязычное"
+const speakWord = (text) => {
+  if (!SpeechModule.supported) return;
+  if (!SpeechModule.isLatin(text)) return;
+  SpeechModule.speak(text, { lang: 'en-US', rate: 0.95 });
+};
+
   // Экспорт в JSON
   exportJsonBtn.addEventListener('click', () => {
     const data = JSON.stringify(StorageModule.getWords(), null, 2);
@@ -216,6 +229,13 @@ const UIModule = (() => {
     };
     reader.readAsText(file);
   });
+
+  if (sessionSpeakBtn) {
+  sessionSpeakBtn.addEventListener('click', () => {
+    const w = SessionModule.getCurrentWord();
+    if (w) speakWord(w.word);
+  });
+}
 
   // Отрисовка карточки вопроса
   const renderQuestion = () => {
@@ -268,10 +288,13 @@ const UIModule = (() => {
 
       optionsContainer.appendChild(btn);
     });
+    // Авто-озвучка при показе нового слова
+speakWord(word.word);
   };
 
   // Старт сеанса
   startSessionBtn.addEventListener('click', () => {
+  SpeechModule.cancel(); // на случай, если что-то доигрывало
     if (!SessionModule.initSession()) {
       emptyDeckMsg.classList.remove('hidden');
       startSessionCard.classList.add('hidden');
@@ -286,6 +309,9 @@ const UIModule = (() => {
 
   // Результаты
   const showResults = () => {
+
+    SpeechModule.cancel();
+
     activeSessionCard.classList.add('hidden');
     resultsCard.classList.remove('hidden');
 
@@ -340,6 +366,9 @@ const UIModule = (() => {
     studyTargetWord.textContent = word.word;
     studyTargetTranslation.textContent = word.translation;
 
+      // 🔊 Авто-озвучка при показе нового слова
+  speakWord(word.word);
+
     // Запуск плавной анимации прогресс-бара
     let startTime = Date.now();
     studyProgressFill.style.width = '0%';
@@ -375,6 +404,7 @@ const UIModule = (() => {
   // Нажатие "Учить ещё 5 слов"
   if (modalContinueBtn) {
     modalContinueBtn.addEventListener('click', () => {
+  SpeechModule.cancel(); // старое слово из прошлой порции не должно договаривать
       studyModal.classList.add('hidden');
 
       if (SessionModule.initStudyDeck()) {
@@ -395,6 +425,9 @@ const UIModule = (() => {
   }
 
   const closeStudyMode = () => {
+
+    SpeechModule.cancel();
+
     clearStudyTimers();
     studyModeCard.classList.add('hidden');
     startSessionCard.classList.remove('hidden');
@@ -403,6 +436,7 @@ const UIModule = (() => {
   // Привязка событий
   if (startStudyBtn) {
     startStudyBtn.addEventListener('click', () => {
+  SpeechModule.cancel();
       if (!SessionModule.initStudyDeck()) {
         alert('Словарь пуст! Добавьте слова во вкладке "Словарь".');
         return;
@@ -414,6 +448,10 @@ const UIModule = (() => {
   }
 
   if (studyNextBtn) {
+  studySpeakBtn.addEventListener('click', () => {
+    const w = SessionModule.getStudyCurrentWord();
+    if (w) speakWord(w.word);
+  });
     studyNextBtn.addEventListener('click', () => {
       handleStudyNextStep(); // Сбрасывает таймер 10 сек и сразу переходит дальше
     });

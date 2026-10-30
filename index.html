@@ -75,7 +75,7 @@
           <div class="word-display-area study-word-area">
             <span class="word-label">Термин:</span>
             <h2 id="study-target-word" class="target-word">Word</h2>
-
+ <button id="study-speak-btn" class="icon-btn glass-btn" title="Озвучить" aria-label="Озвучить слово">🔊</button>
             <div class="translation-divider"></div>
 
             <span class="word-label">Перевод:</span>
@@ -97,10 +97,13 @@
           </div>
 
           <div class="word-display-area">
-            <span class="word-label">Слово:</span>
-            <h2 id="current-word" class="target-word">Word</h2>
-            <span id="hard-word-badge" class="hard-badge hidden">⚠️ Трудное слово</span>
-          </div>
+  <span class="word-label">Слово:</span>
+  <div class="word-with-audio">
+    <h2 id="current-word" class="target-word">Word</h2>
+    <button id="session-speak-btn" class="icon-btn glass-btn" title="Озвучить" aria-label="Озвучить слово">🔊</button>
+  </div>
+  <span id="hard-word-badge" class="hard-badge hidden">⚠️ Трудное слово</span>
+</div>
 
           <div id="options-container" class="options-grid">
             <!-- Динамически заменяется 4 вариантами -->
@@ -296,6 +299,7 @@
   <!-- Скрипты -->
   <script src="js/storage.js"></script>
   <script src="js/session.js"></script>
+  <script src="js/speech.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/pwa.js"></script>
   <script src="js/app.js"></script>
